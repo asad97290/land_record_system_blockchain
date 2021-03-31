@@ -1,0 +1,197 @@
+.row-header {
+  margin: 0px auto;
+  padding: 0px auto;
+}
+
+.row-content {
+  /* margin: 0px auto; */
+  padding-top: 50px;
+  padding-bottom: 50px;
+  border-bottom: 1px ridge;
+  min-height: 400px;
+}
+
+.footer {
+  margin: 0px auto;
+  padding: 20px 0px 20px 0px;
+}
+
+.jumbotron {
+  padding: 30px 30px 30px 30px !important;
+  margin: 0px auto;
+  /* background-color: #9575CD;
+  color: floralwhite; */
+}
+
+.jumbotron h4 {
+  margin: 0px;
+}
+
+address {
+  font-size: 80%;
+  margin: 0px;
+  color: #0f0f0f;
+}
+
+body {
+  padding: 0px 0px 0px 0px;
+  z-index: 0;
+}
+
+.navbar-dark {
+  background-color: #512da8;
+}
+
+.carImg {
+  /* width: auto !important; */
+  /* margin: auto; */
+  height: 500px !important;
+  max-height: 500px !important;
+}
+
+.black {
+  background-color: black;
+}
+
+.text-grey {
+  color: grey;
+}
+
+a:hover {
+  text-decoration: none !important;
+}
+
+ul.timeline {
+  list-style-type: none;
+  position: relative;
+}
+ul.timeline:before {
+  content: " ";
+  background: #d4d9df;
+  display: inline-block;
+  position: absolute;
+  left: 29px;
+  width: 2px;
+  height: 100%;
+  z-index: 400;
+}
+ul.timeline > li {
+  margin: 20px 0;
+  padding-left: 20px;
+}
+ul.timeline > li:before {
+  content: " ";
+  background: white;
+  display: inline-block;
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid #33A137;
+  left: 20px;
+  width: 20px;
+  height: 20px;
+  z-index: 400;
+}
+
+a.navList:hover {
+  /* background-color: #33A137; */
+  border-bottom: 2px solid #33A137;
+  /* border-radius: 5px !important;
+  border-style: solid;
+  border-width: 2px !important;
+  border-color: #33A137 !important;
+  color: white !important; */
+}
+
+.navbar .active {
+  color: #33A137 !important;
+  border-bottom: 2px solid #33A137;
+}
+
+.footNav {
+  width: 40px;
+}
+.text-center{
+  display:flex
+}
+.footNavLink {
+  width: 2.75em;
+    height: 2.75em;
+    flex-shrink: 0;
+    /* position: relative; */
+  
+    justify-content: center;
+    align-items: center;
+    margin: 0.25em 0px;
+    margin-right: 1em;
+
+
+    fill: #fff;
+}
+
+.footNavLink:hover {
+  fill: #33A137;
+}
+
+.list-group-item.active{
+  background-color: #33A137 !important;
+  border-color: #33A137 !important;
+}
+
+.carousel-item-imgs {
+  height: 480px !important;
+  background-color: #000;
+}
+
+.carousel-item-imgs3 {
+  height: 350px !important;
+  background-color: #000;
+}
+
+.carousel-item-imgs2 {
+  width: 100% !important;
+  background-color: #000;
+}
+
+.carousel-item-imgs img, .imgThumb img, .footImg img{
+  width: auto !important;
+  margin: auto;
+}
+
+.bg-black {
+  background-color: #000;
+}
+
+.imgThumb img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+.imgThumb {
+  height: 150px !important;
+  overflow: hidden;
+}
+
+.text-theme {
+  color: #33A137;
+}
+
+.bg-theme {
+  background-color: #33A137;
+}
+
+.border-theme {
+  border: 1px solid #33A137;
+}
+
+.footer a:hover {
+  color: white;
+}
+
+.button-hover:hover {
+  background-color: #3bc73f;
+}
+
+.bg-theme-secondary {
+  background-color: #555;
+}
