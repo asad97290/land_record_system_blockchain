@@ -8,7 +8,7 @@ function Body() {
   const [address, setAddress] = useState("");
   const [token, setToken] = useState("");
 
-  const url1 = `https://35.209.170.73:4000/channels/mychannel/chaincodes/fabcar?args=["${address}"]&fcn=getHistoryForAsset`;
+  const url1 = `http://localhost:4000/channels/mychannel/chaincodes/fabcar?args=["${address}"]&fcn=getHistoryForAsset`;
   let conf = {
     headers: {
       Authorization: `Bearer ${token}`,

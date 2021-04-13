@@ -18,11 +18,10 @@ function Data() {
 
   let { address } = useParams();
 
-
   useEffect(async () => {
     console.log(address);
-    const url1 = `https://35.209.170.73:4000/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=queryLand`;
-    const url2 = `https://35.209.170.73:4000/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=getHistoryForAsset`;
+    const url1 = `http://localhost:4000/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=queryLand`;
+    const url2 = `http://localhost:4000/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=getHistoryForAsset`;
     let conf = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -118,11 +117,10 @@ function Data() {
                   <div className="row">
                     <div className="col-12 col-lg-6">
                       <div className="row">
-
                         <div className="col-6">
                           <p className="text-secondary">House Number</p>
                         </div>
-                        
+
                         <div className="col-6 d-flex">
                           <p className="h6" id="address">
                             {property.address}
@@ -133,7 +131,6 @@ function Data() {
                             aria-hidden="true"
                           ></i>
                         </div>
-
                       </div>
                       <div className="row">
                         <div className="col-6">
@@ -234,7 +231,7 @@ function Data() {
                                   {propertyInfo.Value.status}
                                 </span>
                                 <br />
-                                Area: 
+                                Area:
                                 {propertyInfo.Value.area}
                               </p>
                             </li>
@@ -242,7 +239,7 @@ function Data() {
                         })}
                       </ul>
                       <h4>QR Code:</h4>
-                      <img src={url} alt="Property QR code" /> 
+                      <img src={url} alt="Property QR code" />
                     </div>
                   </div>
                 </div>

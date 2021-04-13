@@ -30,8 +30,7 @@ function Data() {
     window.location.pathname = "/signin";
   }
 
-  const url =
-    "https://35.209.170.73:4000/channels/mychannel/chaincodes/landRecord";
+  const url = "http://localhost:4000/channels/mychannel/chaincodes/landRecord";
   const url2 = url + `?args=["${userCnic}"]&fcn=queryLandsByOwner`;
 
   let conf = {
@@ -40,8 +39,6 @@ function Data() {
       "Content-Type": "application/json",
     },
   };
-
-
 
   useEffect(() => {
     axios.get(url2, conf).then((response) => {
@@ -65,7 +62,7 @@ function Data() {
         selectedFile.selected.name
       );
       axios
-        .post("https://35.209.170.73:4000/profile-img-upload", data, {
+        .post("http://localhost:4000/profile-img-upload", data, {
           headers: {
             accept: "application/json",
             "Accept-Language": "en-US,en;q=0.8",
@@ -106,7 +103,7 @@ function Data() {
   }
 
   async function checkProperty(address) {
-    const url3 = `https://35.209.170.73:4000/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=queryLand`;
+    const url3 = `http://localhost:4000/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=queryLand`;
     const response = await axios.get(url3, conf);
     if (response.data.error) {
       return true;
@@ -208,13 +205,16 @@ function Data() {
                             </div>
                             <div className="card-body text-left">
                               <h5 className="card-title text-dark font-weight-bold">
-                                {property.location}{" "}{property.area}{" "}{property.city}
+                                {property.location} {property.area}{" "}
+                                {property.city}
                               </h5>
 
                               <Link
                                 className="btn bg-theme border-theme button-hover"
                                 to={{
-                                  pathname: "/property/"+property.address.replaceAll(" ", "+"),
+                                  pathname:
+                                    "/property/" +
+                                    property.address.replaceAll(" ", "+"),
                                   data: property.address,
                                 }}
                               >
@@ -335,7 +335,6 @@ function Data() {
                     />
                   </Form.Group>
 
-                  
                   <Form.Group>
                     <Form.Label>CNIC Of Buyer *</Form.Label>
                     <Form.Control
