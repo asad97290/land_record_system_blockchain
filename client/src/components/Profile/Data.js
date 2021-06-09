@@ -46,8 +46,9 @@ function Data() {
     axios
     .get("http://localhost:4000/getDataDb", conf)
     .then((response)=>{
-      let landData=response.landData;
-      setPendingLandRecord(landData)
+    // let landData=response.data;
+      setPendingLandRecord(response.data.landData)
+      console.log("hello world of karachi",response.data.landData[0].data[6]);
     })
     .catch((error) => {
       alert(error);
@@ -124,16 +125,16 @@ function Data() {
       return false;
     }
   }
-  async function getPendingLandRecord(){
-    axios
-    .get("http://localhost:4000/getDataDb", {args}, conf)
-    .then(()=>{
+  // async function getPendingLandRecord(){
+  //   axios
+  //   .get("http://localhost:4000/getDataDb", {args}, conf)
+  //   .then(()=>{
 
-    })
-    .catch((error) => {
-      alert(error);
-    });
-  }
+  //   })
+  //   .catch((error) => {
+  //     alert(error);
+  //   });
+  // }
   function transferOwnership(event) {
     event.preventDefault();
 
@@ -180,10 +181,7 @@ function Data() {
       args.pop();
       args.push(userCnic);
       args.push(loc);
-      data["fcn"] = "createLand";
-      data["chaincodeName"] = "landRecord";
-      data["channelName"] = "mychannel";
-      data["args"] = args;
+     
       console.log("-----sk1233434",args);
       // axios
       //   .post(url, data, conf)
@@ -206,6 +204,24 @@ function Data() {
       document.getElementById("city").value = "";
       document.getElementById("country").value = "";
     }
+  }
+
+  async function approveLandRecord(data){
+    let land={
+      fcn:"createLand",
+      chaincodeName : "landRecord",
+      channelName:"mychannel",
+      args:data
+    
+    }
+    
+    axios
+        .post(url, land, conf)
+        .then(alert("Land Record approved successfully"))
+        .catch((error) => {
+          alert(error);
+        });
+
   }
 
   return (
@@ -399,6 +415,45 @@ function Data() {
                   </Button>
                 </Form>
               </Tab.Pane>
+              <Tab.Pane eventKey="#link4" className="text-center">
+                <h4>Approve Property(s)</h4>
+                <br />
+                <div className="container">
+                  <div className="row">
+                  {pendingLandRecord.map((land, index) => {
+    return (
+      <div key={index} className="col-12 col-md-6 mb-4">
+        <div className="card p-3 d-flex align-content-between flex-wrap">
+          <div className="overflow-hidden px-1 imgThumb bg-black">
+            <img
+              src={land.data[7]}
+              className="card-img-top mh-100 d-block"
+              alt="..."
+            />
+          </div>
+          <div className="card-body text-left">
+            <h5 className="card-title text-dark font-weight-bold">
+              {land.data[1]} {land.data[3]} {land.data[4]}{land.data[5]}
+            </h5>
+
+            <button
+              //to={"/land/" + land.data[0]}
+              onClick={()=>{
+                approveLandRecord(land.data)
+              }}
+              className="btn btn-danger"
+            >
+              Approve
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  })}
+                  </div>
+                </div>
+              </Tab.Pane>
+            
             </Tab.Content>
           </Col>
           <Col sm={4}>
@@ -411,9 +466,13 @@ function Data() {
             <ListGroup>
               {organization === "Org1" ? (
                 <>
-                  <ListGroup.Item action href="#link1">
-                    Approve land Records
-                  </ListGroup.Item>
+                 <ListGroup.Item
+                    action
+                  href="#link4"
+                  onClick={() => setPageUrl(window.location.href)}
+                >
+                  Approve Land Records
+                </ListGroup.Item>
                 </>
               ) : (
                 <>
