@@ -26,6 +26,7 @@ function Data() {
   const data = {};
   const [selectedFile, setSelectedFile] = useState({ selected: null });
 
+  const [pendingLandRecord, setPendingLandRecord] = useState([])
   if (!token) {
     window.location.pathname = "/signin";
   }
@@ -40,7 +41,17 @@ function Data() {
     },
   };
 
+  
   useEffect(() => {
+    axios
+    .get("http://localhost:4000/getDataDb", conf)
+    .then((response)=>{
+      let landData=response.landData;
+      setPendingLandRecord(landData)
+    })
+    .catch((error) => {
+      alert(error);
+    });
     axios.get(url2, conf).then((response) => {
       setProperties(response.data.result);
     });
@@ -113,7 +124,16 @@ function Data() {
       return false;
     }
   }
+  async function getPendingLandRecord(){
+    axios
+    .get("http://localhost:4000/getDataDb", {args}, conf)
+    .then(()=>{
 
+    })
+    .catch((error) => {
+      alert(error);
+    });
+  }
   function transferOwnership(event) {
     event.preventDefault();
 
