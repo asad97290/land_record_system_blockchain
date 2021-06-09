@@ -118,7 +118,7 @@ function Data() {
                     <div className="col-12 col-lg-6">
                       <div className="row">
                         <div className="col-6">
-                          <p className="text-secondary">House Number</p>
+                          <p className="text-secondary">Khasra Number</p>
                         </div>
 
                         <div className="col-6 d-flex">
@@ -168,7 +168,7 @@ function Data() {
                       </div>
                       <div className="row">
                         <div className="col-6">
-                          <p className="text-secondary">Country</p>
+                          <p className="text-secondary">Tehsil</p>
                         </div>
                         <div className="col-6">
                           <p className="h6"> {property.country} </p>
@@ -193,7 +193,7 @@ function Data() {
                     </div>
                   </div>
                   <hr />
-                  <h4>Car History</h4>
+                  <h4>Property History</h4>
                   <div className="row">
                     <div className="col-12">
                       <ul className="timeline">
@@ -238,8 +238,7 @@ function Data() {
                           );
                         })}
                       </ul>
-                      <h4>QR Code:</h4>
-                      <img src={url} alt="Property QR code" />
+                      
                     </div>
                   </div>
                 </div>

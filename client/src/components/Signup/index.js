@@ -13,13 +13,13 @@ function index(props) {
     return (
         <div className="bg-light">
             <Helmet>
-                <title>Car Lifecycle Blockchain Network</title>
+                <title>Land Record Management System</title>
             </Helmet>
             <NavigationBar path={props.location.pathname} />
             
             {/* <BreadCrumbs path={props.location.pathname} /> */}
             <Data />
-            <Footer />
+            
         </div>
     );
 }

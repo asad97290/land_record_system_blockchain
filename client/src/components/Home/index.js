@@ -12,7 +12,7 @@ function Home(props) {
             </Helmet>
             <NavigationBar path={props.location.pathname}/>
             <Body />
-            <Footer />
+            
         </div>
     );
 }

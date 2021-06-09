@@ -135,7 +135,7 @@ function Data() {
         data["channelName"] = "mychannel";
         data["args"] = args;
         axios.post(url, data, conf).then(function (response) {
-          alert("Successfully transfered car asset");
+          alert("Ownership transfer application submitted successfully");
         });
 
         document.getElementById("address").value = "";
@@ -144,7 +144,7 @@ function Data() {
       }
     });
     if (counter === 0) {
-      alert("Wrong address");
+      alert("No property exists with this Khasra number");
       return;
     }
   }
@@ -164,10 +164,17 @@ function Data() {
       data["chaincodeName"] = "landRecord";
       data["channelName"] = "mychannel";
       data["args"] = args;
-      console.log(data);
+      console.log("-----sk1233434",args);
+      // axios
+      //   .post(url, data, conf)
+      //   .then(alert("Application submitted successfully"))
+      //   .catch((error) => {
+      //     alert(error);
+      //   });
+
       axios
-        .post(url, data, conf)
-        .then(alert("Success property asset created"))
+        .post("http://localhost:4000/storeDataDb", {args}, conf)
+        .then(alert("Application submitted successfully"))
         .catch((error) => {
           alert(error);
         });
@@ -229,16 +236,16 @@ function Data() {
                 </div>
               </Tab.Pane>
               <Tab.Pane eventKey="#link2" className="text-center">
-                <h4>Asset Creation</h4>
+                <h4>Register your property</h4>
                 <Form
                   className="text-left addForm py-4 mb-3"
                   onSubmit={singleFileUploadHandler}
                 >
                   <Form.Group>
-                    <Form.Label>House Number *</Form.Label>
+                    <Form.Label>Khasra Number *</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="Enter Property Address Here. Don't use '/'"
+                      placeholder="Enter Property Khasra number Here. Don't use '/'"
                       required
                       name="address"
                       id="address"
@@ -256,11 +263,10 @@ function Data() {
                     />
                   </Form.Group>
                   <Form.Group>
-                    <Form.Label>Type *</Form.Label>
+                    <Form.Label>Type of property *</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="Enter Your Property Type"
-                      required
+                      placeholder="Residential, Commercial etc."
                       name="type"
                       id="type"
                     />
@@ -270,12 +276,24 @@ function Data() {
                     <Form.Label>Area *</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="Enter Your Property Area in Yards"
+                      placeholder="Enter Your Property Area in Marlas/Yards"
                       required
                       name="area"
                       id="area"
                     />
                   </Form.Group>
+                  
+                     <Form.Group>
+                    <Form.Label>Tehsil *</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter Tehsil of Your Property"
+                      required
+                      name="country"
+                      id="country"
+                    />
+                  </Form.Group>
+                  
                   <Form.Group>
                     <Form.Label>City *</Form.Label>
                     <Form.Control
@@ -286,18 +304,9 @@ function Data() {
                       id="city"
                     />
                   </Form.Group>
+               
                   <Form.Group>
-                    <Form.Label>Country *</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter Country of Your Property"
-                      required
-                      name="country"
-                      id="country"
-                    />
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label>Image *</Form.Label>
+                    <Form.Label>Property Image *</Form.Label>
                     <Form.Control
                       onChange={singleFileChangedHandler}
                       type="file"
@@ -307,6 +316,19 @@ function Data() {
                       name="propertyImage"
                     />
                   </Form.Group>
+                  
+                  {/*<Form.Group>
+                    <Form.Label>Property documents *</Form.Label>
+                    <Form.Control
+                      onChange={singleFileChangedHandler}
+                      type="file"
+                      id="propertyImage"
+                      placeholder="Upload docs of Your Property"
+                      required
+                      name="propertyImage"
+                    />
+                  </Form.Group>*/}
+                  
                   <Button
                     variant="primary"
                     type="submit"
@@ -325,10 +347,10 @@ function Data() {
                   onSubmit={transferOwnership}
                 >
                   <Form.Group>
-                    <Form.Label>House Number *</Form.Label>
+                    <Form.Label>Khasra Number *</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="Enter Property Address Here. Don't use '/'"
+                      placeholder="Enter Khasra number of the property Here. Don't use '/'"
                       required
                       name="address"
                       id="address"
@@ -340,7 +362,7 @@ function Data() {
                     <Form.Control
                       type="text"
                       id="ownerCnic"
-                      placeholder="Enter Cnic Without Dashes"
+                      placeholder="Enter Cnic 37405xxxxxxxx"
                       required
                       name="ownerCnic"
                       minLength="13"
@@ -367,27 +389,32 @@ function Data() {
             </h6>
             <br />
             <ListGroup>
-              <ListGroup.Item
-                action
-                href="#link1"
-                onClick={() => setPageUrl(window.location.href)}
-              >
-                My Property(s)
-              </ListGroup.Item>
               {organization === "Org1" ? (
                 <>
-                  <ListGroup.Item action href="#link2">
-                    Create Property Record
-                  </ListGroup.Item>
-                  <ListGroup.Item action href="#link3">
-                    Transfer Ownership
+                  <ListGroup.Item action href="#link1">
+                    Approve land Records
                   </ListGroup.Item>
                 </>
               ) : (
                 <>
+
+                <ListGroup.Item
+                    action
+                  href="#link1"
+                  onClick={() => setPageUrl(window.location.href)}
+                >
+                  My properties
+                </ListGroup.Item>
+              
+
+                  <ListGroup.Item action href="#link2">
+                    Create land record
+                  </ListGroup.Item>
                   <ListGroup.Item action href="#link3">
                     Transfer Ownership
                   </ListGroup.Item>
+                  
+                  
                 </>
               )}
             </ListGroup>

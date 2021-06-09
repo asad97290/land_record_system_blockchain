@@ -12,7 +12,7 @@ function index(props) {
             </Helmet>
             <NavigationBar path={props.location.pathname} />
             <Data />
-            <Footer />
+            
         </div>
     );
 }

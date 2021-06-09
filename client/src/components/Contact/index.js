@@ -14,7 +14,7 @@ function index(props) {
             <NavigationBar path={props.location.pathname} />
             <BreadCrumbs path={props.location.pathname} />
             <Data />
-            <Footer />
+           
         </div>
     );
 }

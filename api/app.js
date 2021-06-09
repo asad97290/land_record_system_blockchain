@@ -15,6 +15,12 @@ const cors = require("cors");
 const constants = require("./config/constants.json");
 const https = require("https");
 const fs = require("fs");
+const nano = require("nano") ("http://admin:password@localhost:5990");
+let offDb
+
+
+
+
 
 // const host = process.env.HOST || constants.host;
 const port = process.env.PORT || constants.port;
@@ -38,7 +44,7 @@ app.use(
   expressJWT({
     secret: "thisismysecret",
   }).unless({
-    path: ["/users", "/users/login", "/profile-img-upload"],
+    path: ["/users", "/users/login", "/profile-img-upload", "/storeDataDb", "/getDataDb"],
   })
 );
 app.use(bearerToken());
@@ -50,7 +56,9 @@ app.use((req, res, next) => {
   if (
     req.originalUrl.indexOf("/users") >= 0 ||
     req.originalUrl.indexOf("/profile-img-upload") >= 0 ||
-    req.originalUrl.indexOf("/users/login") >= 0
+    req.originalUrl.indexOf("/users/login") >= 0 ||
+    req.originalUrl.indexOf("/storeDataDb") >= 0 ||
+    req.originalUrl.indexOf("/getDataDb") >= 0
   ) {
     return next();
   }
@@ -80,6 +88,18 @@ app.use((req, res, next) => {
     }
   });
 });
+// create couchDb
+async function createOffChainDB() {
+  try {
+    //await nano.db.destroy('alice')
+    //await nano.db.create('alice')
+    offDb = nano.use("alice");
+  } catch (e) {
+    // failed
+    console.error(e);
+  }
+}
+createOffChainDB();
 
 // var server = http.createServer(app).listen(port, function () {
 //   console.log(`Server started on ${port}`);
@@ -378,4 +398,38 @@ app.post("/profile-img-upload", (req, res) => {
       }
     }
   });
+});
+// Store the data in couchdb
+app.post("/storeDataDb",async(req, res) => {
+  try{
+    let args = req.body.args
+    console.log(args);
+    let result = await offDb.insert({data:args}, args[0]);
+    res.json({result});
+  }
+  catch(error){
+    console.log(error);
+    res.json({error});
+  }
+  
+});
+
+// Store the data in couchdb
+app.get("/getDataDb",async(req, res) => {
+  try{
+    let landData = [];
+    const doclist = await offDb.list()
+    console.log(doclist);
+    for(let i=0;i<doclist.rows.length; i++){
+    let data = await offDb.get(doclist.rows[i].key)
+    landData.push(data);
+    }
+    
+    res.json({landData});
+  }
+  catch(error){
+    console.log(error);
+    res.json({error});
+  }
+  
 });
