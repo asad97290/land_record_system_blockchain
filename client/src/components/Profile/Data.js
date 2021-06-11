@@ -48,7 +48,7 @@ function Data() {
     .then((response)=>{
     // let landData=response.data;
       setPendingLandRecord(response.data.landData)
-      console.log("hello world of karachi",response.data.landData[0].data[6]);
+      console.log("hello world of karachi",response.data.landData);
     })
     .catch((error) => {
       alert(error);
@@ -211,16 +211,48 @@ function Data() {
       fcn:"createLand",
       chaincodeName : "landRecord",
       channelName:"mychannel",
-      args:data
+      args:data.data
     
     }
-    
     axios
         .post(url, land, conf)
-        .then(alert("Land Record approved successfully"))
+        .then(()=>{
+          let _land={
+            id : data._id,
+            rev: data._rev
+           }
+           axios
+           .post("http://localhost:4000/removeDataDb", {_land}, conf)
+           .then()
+           .catch((error) => {
+             alert(error);
+           });
+          alert("Land Record approved successfully")
+        })
         .catch((error) => {
           alert(error);
         });
+
+  }
+
+ async function rejectLandRecord(data){
+   try{
+    let land={
+      id : data._id,
+      rev: data._rev
+     }
+     axios
+     .post("localhost:4000/removeDataDb", land, conf)
+     .then(alert("Land Record Rejected"))
+     .catch((error) => {
+       alert(error);
+     });
+   } catch(error){
+     alert(error)
+   }
+    
+  
+   
 
   }
 
@@ -417,10 +449,12 @@ function Data() {
               </Tab.Pane>
               <Tab.Pane eventKey="#link4" className="text-center">
                 <h4>Approve Property(s)</h4>
+            
                 <br />
                 <div className="container">
                   <div className="row">
                   {pendingLandRecord.map((land, index) => {
+
     return (
       <div key={index} className="col-12 col-md-6 mb-4">
         <div className="card p-3 d-flex align-content-between flex-wrap">
@@ -439,11 +473,21 @@ function Data() {
             <button
               //to={"/land/" + land.data[0]}
               onClick={()=>{
-                approveLandRecord(land.data)
+                approveLandRecord(land)
+              }}
+              className="btn btn-success"
+            >
+              Approve
+            </button>
+
+            <button
+              //to={"/land/" + land.data[0]}
+              onClick={()=>{
+                rejectLandRecord(land)
               }}
               className="btn btn-danger"
             >
-              Approve
+              Reject 
             </button>
           </div>
         </div>

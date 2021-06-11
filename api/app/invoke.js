@@ -64,14 +64,14 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, userCnic
         let message;
         if (fcn === "createLand" ) {
             result = await contract.submitTransaction(fcn, args[0], args[1], args[2], args[3], args[4],args[5], args[6],args[7]);
-            message = `Successfully added the car asset with key ${args[0]}`
+            message = `Successfully added the Land asset with key ${args[0]}`
 
-        } else if (fcn === "changeCarOwner") {
+        } else if (fcn === "changeLandOwner") {
             result = await contract.submitTransaction(fcn, args[0], args[1]);
-            message = `Successfully changed car owner with key ${args[0]}`
+            message = `Successfully changed Land owner with key ${args[0]}`
         } 
         else {
-            return `Invocation require either createCar or changeCarOwner as function but got ${fcn}`
+            return `Invocation require either create Land or change Land Owner as function but got ${fcn}`
         }
 
         await gateway.disconnect();
