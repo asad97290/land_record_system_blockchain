@@ -4,7 +4,7 @@ const logger = log4js.getLogger('BasicNetwork');
 const util = require('util')
 
 // const createTransactionEventHandler = require('./MyTransactionEventHandler.ts')
-
+const {contractListener,getCar } = require("./listeners");
 const helper = require('./helper')
 
 // const createTransactionEventHandler = (transactionId, network) => {
@@ -59,7 +59,8 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, userCnic
         const network = await gateway.getNetwork(channelName);
 
         const contract = network.getContract(chaincodeName);
-
+        await contract.addContractListener(contractListener);
+        
         let result
         let message;
         if (fcn === "createLand" ) {

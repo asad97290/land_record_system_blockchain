@@ -15,7 +15,7 @@ const cors = require("cors");
 const constants = require("./config/constants.json");
 const https = require("https");
 const fs = require("fs");
-
+const nano = require("nano")("http://admin:password@localhost:5990");
 // const host = process.env.HOST || constants.host;
 const port = process.env.PORT || constants.port;
 
@@ -80,7 +80,35 @@ app.use((req, res, next) => {
     }
   });
 });
+async function createOffChainDB() {
+  try {
+    // await nano.db.destroy('alice')
+    // await nano.db.create('alice')
+    const databases = await nano.db.list();
+    if (databases.indexOf("offDb") < 0) {
+      await nano.db.create("offDb");
+    }
+    offDb = nano.use("offDb");
+  } catch (e) {
+    // failed
+    console.error(e);
+  }
+}
 
+async function createAuthDB() {
+  try {
+    const databases = await nano.db.list();
+    if (databases.indexOf("authDb") < 0) {
+      await nano.db.create("authDb");
+    }
+    authDb = nano.use("auth");
+  } catch (e) {
+    // failed
+    console.error(e);
+  }
+}
+createOffChainDB();
+createAuthDB();
 // var server = http.createServer(app).listen(port, function () {
 //   console.log(`Server started on ${port}`);
 // });
@@ -147,18 +175,63 @@ const profileImgUpload = multer({
 
 // Register and enroll user
 app.post("/users", async function (req, res) {
+  var email = req.body.email;
   var userCnic = req.body.userCnic;
+  var password = req.body.password;
   var orgName = req.body.orgName;
   logger.debug("End point : /users");
+  logger.debug("Email : " + email);
   logger.debug("User name : " + userCnic);
   logger.debug("Org name  : " + orgName);
+  if (!email) {
+    res.json(getErrorMessage("'email'"));
+    return;
+  }
   if (!userCnic) {
     res.json(getErrorMessage("'userCnic'"));
+    return;
+  }
+  if (!password) {
+    res.json(getErrorMessage("'password'"));
     return;
   }
   if (!orgName) {
     res.json(getErrorMessage("'orgName'"));
     return;
+  }
+
+  let user = null;
+
+  try {
+    user = await authDb.get(email);
+  } catch (e) {
+    console.error(e.statusCode);
+  }
+
+  if (user) {
+    res.json({
+      success: false,
+      message: "A user with this email already exists!",
+    });
+    return;
+  }
+
+  try {
+    const query = {
+      selector: {
+        cnic: { $eq: userCnic },
+      },
+    };
+    const users = await authDb.find(query);
+    if (users.docs && users.docs.length > 0) {
+      res.json({
+        success: false,
+        message: "A user with this CNIC already exists!",
+      });
+      return;
+    }
+  } catch (e) {
+    console.error(e.statusCode);
   }
 
   let response = await helper.getRegisteredUser(userCnic, orgName, true);
@@ -174,6 +247,19 @@ app.post("/users", async function (req, res) {
       userCnic,
       orgName
     );
+
+    let r = await authDb.insert(
+      {
+        email: email,
+        password,
+        password,
+        cnic: userCnic,
+        org: orgName,
+        x509Identity: response.x509Identity,
+      },
+      email
+    );
+    console.log("authDb Response", r);
     res.json(response);
   } else {
     logger.debug(
@@ -188,29 +274,55 @@ app.post("/users", async function (req, res) {
 
 // Login and get jwt
 app.post("/users/login", async function (req, res) {
-  var userCnic = req.body.userCnic;
-  var orgName = req.body.orgName;
-  var certificate = req.body.certificate;
+  /*var userCnic = req.body.userCnic;*/
+  var email = req.body.email;
+  var password = req.body.password;
+
   logger.debug("End point : /users");
-  logger.debug("User name : " + userCnic);
-  logger.debug("Org name  : " + orgName);
-  logger.debug("certificate  : " + certificate);
-  if (!userCnic) {
-    res.json(getErrorMessage("'userCnic'"));
+  logger.debug("Email : " + email);
+
+  if (!email) {
+    res.json(getErrorMessage("'email'"));
     return;
   }
-  if (!orgName) {
-    res.json(getErrorMessage("'orgName'"));
+  if (!password) {
+    res.json(getErrorMessage("'password'"));
     return;
   }
-  if (!certificate) {
-    res.json(getErrorMessage("'certificate'"));
+
+  let user = null;
+  try {
+    user = await authDb.get(email);
+  } catch (e) {
+    console.error(e.statusCode);
+  }
+
+  if (!user) {
+    res.json({
+      success: false,
+      message: "A user with this email does not exist!",
+    });
     return;
   }
+
+  if (password !== user.password) {
+    let response = {
+      success: false,
+      message: "Email/Password does not match!",
+    };
+    res.json(response);
+    return;
+  }
+
+  let userCnic = user.cnic;
+  let orgName = user.org;
+
+  let certificate = JSON.stringify(user.x509Identity.credentials.certificate);
 
   var token = jwt.sign(
     {
       exp: Math.floor(Date.now() / 1000) + parseInt(constants.jwt_expiretime),
+      email: email,
       userCnic: userCnic,
       orgName: orgName,
     },
@@ -224,11 +336,14 @@ app.post("/users/login", async function (req, res) {
   );
 
   if (isUserRegistered) {
-    res.json({ success: true, message: { token: token } });
+    res.json({
+      success: true,
+      message: { token: token, userCnic: userCnic, orgName: orgName },
+    });
   } else {
     res.json({
       success: false,
-      message: `User with userCnic ${userCnic} is not registered with ${orgName}, Please register first.`,
+      message: `User with email ${email} is not registered with ${orgName}, Please register first.`,
     });
   }
 });
