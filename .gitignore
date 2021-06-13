@@ -4,7 +4,7 @@ log.txt
 
 landRecord.tar.gz
 
-
+client/node_modules
 api/node_modules
 
 artifacts/channel/crypto-config
