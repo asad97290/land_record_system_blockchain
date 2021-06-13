@@ -2,13 +2,14 @@ import React, { useState, Fragment } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import property from "../assets/cars/banner.png";
+import {BASE_URL} from "../constants.js"
 import axios from "axios";
 
 function Body() {
   const [address, setAddress] = useState("");
   const [token, setToken] = useState("");
 
-  const url1 = `http://localhost:4000/channels/mychannel/chaincodes/fabcar?args=["${address}"]&fcn=getHistoryForAsset`;
+  const url1 = `${BASE_URL}/channels/mychannel/chaincodes/fabcar?args=["${address}"]&fcn=getHistoryForAsset`;
   let conf = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -201,3 +202,5 @@ function Body() {
 }
 
 export default Body;
+
+

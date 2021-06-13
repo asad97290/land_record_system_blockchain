@@ -1,4 +1,4 @@
-let car;
+let land;
 contractListener = async (event) => {
 
     const asset = JSON.parse(event.payload.toString());
@@ -7,7 +7,7 @@ contractListener = async (event) => {
     const eventTransaction = event.getTransactionEvent();
     console.log(` -------transaction id---------: ${eventTransaction.transactionId} `);
 
-    car = {
+    land = {
         asset,
         txId:eventTransaction.transactionId,
         date:new Date().toLocaleString()
@@ -15,11 +15,11 @@ contractListener = async (event) => {
   
 };
 
-getCar = async()=>{
-    return car;
+getLand = async()=>{
+    return land;
 }
 
 module.exports = {
     contractListener,
-    getCar
+    getLand
 }

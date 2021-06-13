@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import {BASE_URL} from "../../constants.js"
 import {
   Button,
   Col,
@@ -30,7 +31,7 @@ function Data() {
     window.location.pathname = "/signin";
   }
 
-  const url = "http://localhost:4000/channels/mychannel/chaincodes/landRecord";
+  const url = `${BASE_URL}/channels/mychannel/chaincodes/landRecord`;
   const url2 = url + `?args=["${userCnic}"]&fcn=queryLandsByOwner`;
 
   let conf = {
@@ -62,7 +63,7 @@ function Data() {
         selectedFile.selected.name
       );
       axios
-        .post("http://localhost:4000/profile-img-upload", data, {
+        .post(`${BASE_URL}/profile-img-upload`, data, {
           headers: {
             accept: "application/json",
             "Accept-Language": "en-US,en;q=0.8",
@@ -103,7 +104,7 @@ function Data() {
   }
 
   async function checkProperty(address) {
-    const url3 = `http://localhost:4000/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=queryLand`;
+    const url3 = `${BASE_URL}/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=queryLand`;
     const response = await axios.get(url3, conf);
     if (response.data.error) {
       return true;
@@ -160,11 +161,11 @@ function Data() {
       args.pop();
       args.push(userCnic);
       args.push(loc);
+      console.log("----------------",args.length)
       data["fcn"] = "createLand";
       data["chaincodeName"] = "landRecord";
       data["channelName"] = "mychannel";
       data["args"] = args;
-      console.log(data);
       axios
         .post(url, data, conf)
         .then(alert("Success property asset created"))

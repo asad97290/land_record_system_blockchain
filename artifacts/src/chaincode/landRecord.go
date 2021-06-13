@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 	sc "github.com/hyperledger/fabric-protos-go/peer"
 	"github.com/hyperledger/fabric/common/flogging"
@@ -17,15 +18,15 @@ type SmartContract struct {
 
 // Car :  Define the car structure.  Structure tags are used by encoding/json library
 type Land struct {
-	Address	   string `json:"address"`
-	Location   string `json:"location"`	
-	Type   string `json:"type"`
-	Area   string `json:"area"`
-	City   string `json:"city"`	
-	Country    string `json:"country"`	
-	OwnerCnic    string `json:"ownerCnic"`	
-	PropertyImage   string `json:"propertyImage"`		
-	Status   string `json:"status"`	
+	Address       string `json:"address"`
+	Location      string `json:"location"`
+	Type          string `json:"type"`
+	Area          string `json:"area"`
+	City          string `json:"city"`
+	Country       string `json:"country"`
+	OwnerCnic     string `json:"ownerCnic"`
+	PropertyImage string `json:"propertyImage"`
+	Status        string `json:"status"`
 }
 
 // Init ;  Method for initializing smart contract
@@ -37,9 +38,8 @@ var logger = flogging.MustGetLogger("fabcar_cc")
 
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	lands := []Land{
-		Land{Address: "R-1028 sector 15/A", Location: "Buffer zone", Type: "House", Area: "120 yards", City: "Karachi",Country: "Pakistan",  OwnerCnic:"42101-2696589-3", PropertyImage: "https://carhistorypictures.s3-ap-southeast-1.amazonaws.com/2018_Toyota_Corolla.jpg",Status:"created"},
-		Land{Address: "R-1027 sector 15/A", Location: "Buffer zone", Type: "House", Area: "120 yards", City: "Karachi",Country: "Pakistan",  OwnerCnic:"42101-2696589-3", PropertyImage: "https://carhistorypictures.s3-ap-southeast-1.amazonaws.com/2018_Toyota_Corolla.jpg",Status:"created"},
-
+		Land{Address: "R-1028 sector 15/A", Location: "Buffer zone", Type: "House", Area: "120 yards", City: "Karachi", Country: "Pakistan", OwnerCnic: "42101-2696589-3", PropertyImage: "https://carhistorypictures.s3-ap-southeast-1.amazonaws.com/2018_Toyota_Corolla.jpg", Status: "created"},
+		Land{Address: "R-1027 sector 15/A", Location: "Buffer zone", Type: "House", Area: "120 yards", City: "Karachi", Country: "Pakistan", OwnerCnic: "42101-2696589-3", PropertyImage: "https://carhistorypictures.s3-ap-southeast-1.amazonaws.com/2018_Toyota_Corolla.jpg", Status: "created"},
 	}
 
 	i := 0
@@ -81,7 +81,6 @@ func (s *SmartContract) queryLand(APIstub shim.ChaincodeStubInterface, args []st
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
-	
 
 	landAsBytes, err := APIstub.GetState(args[0])
 	if err != nil {
@@ -99,7 +98,7 @@ func (s *SmartContract) createLand(APIstub shim.ChaincodeStubInterface, args []s
 	if len(args) != 8 {
 		return shim.Error("Incorrect number of arguments. Expecting 7")
 	}
-	var land = Land{Address: args[0], Location: args[1], Type: args[2], Area: args[3], City: args[4],Country: args[5],  OwnerCnic:args[6], PropertyImage: args[7],Status:"created"}
+	var land = Land{Address: args[0], Location: args[1], Type: args[2], Area: args[3], City: args[4], Country: args[5], OwnerCnic: args[6], PropertyImage: args[7], Status: "created"}
 
 	landAsBytes, _ := json.Marshal(land)
 	APIstub.PutState(args[0], landAsBytes)
@@ -271,7 +270,6 @@ func (s *SmartContract) changeLandOwner(APIstub shim.ChaincodeStubInterface, arg
 	return shim.Success(landAsBytes)
 }
 
-
 // The main function is only relevant in unit test mode. Only included here for completeness.
 func main() {
 	// Create a new Smart Contract
@@ -280,4 +278,3 @@ func main() {
 		fmt.Printf("Error creating new Smart Contract: %s", err)
 	}
 }
- 

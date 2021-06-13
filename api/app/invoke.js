@@ -4,7 +4,7 @@ const logger = log4js.getLogger('BasicNetwork');
 const util = require('util')
 
 // const createTransactionEventHandler = require('./MyTransactionEventHandler.ts')
-const {contractListener,getCar } = require("./listeners");
+const {contractListener,getLand } = require("./listeners");
 const helper = require('./helper')
 
 // const createTransactionEventHandler = (transactionId, network) => {
@@ -14,7 +14,7 @@ const helper = require('./helper')
 //     return new MyTransactionEventHandler(transactionId, network, myOrgPeers);
 // }
 
-const invokeTransaction = async (channelName, chaincodeName, fcn, args, userCnic, org_name) => {
+const invokeTransaction = async (channelName, chaincodeName, fcn, args, userCnic, org_name,offDb) => {
     try {
         logger.debug(util.format('\n============ invoke transaction on channel %s ============\n', channelName));
 
@@ -64,14 +64,36 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, userCnic
         let result
         let message;
         if (fcn === "createLand" ) {
+            
             result = await contract.submitTransaction(fcn, args[0], args[1], args[2], args[3], args[4],args[5], args[6],args[7]);
+            
+            // let output = JSON.parse(result.toString());
+            let _result = await getLand() 
+            let a= {
+                result:[_result]
+            }
+            // console.log("+++++++++++++++++++++++",JSON.parse(result.toString()))
+            await offDb.insert(a, args[0])
             message = `Successfully added the car asset with key ${args[0]}`
-
-        } else if (fcn === "changeCarOwner") {
+        
+        } else if (fcn === "changeLandOwner") {
             result = await contract.submitTransaction(fcn, args[0], args[1]);
+            let _result = await getLand()
+            // let output = JSON.parse(result.toString());
+            let a = await offDb.get(args[0])
+            // console.log("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK",a)
+            a.result.push(_result)
+           
+            await offDb.insert({ _id: a._id, _rev: a._rev,result:a.result  })
+            // await offDb.insert([...output.result], args[0])
+            
+            // let b = await offDb.get(args[0])
+       
+         
             message = `Successfully changed car owner with key ${args[0]}`
         } 
         else {
+            
             return `Invocation require either createCar or changeCarOwner as function but got ${fcn}`
         }
 

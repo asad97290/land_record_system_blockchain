@@ -25,7 +25,8 @@ const query = require("./app/query");
 
 app.options("*", cors());
 app.use(cors());
-
+let offDb;
+let authDb;
 app.use(express.json());
 app.use(
   express.urlencoded({
@@ -82,13 +83,12 @@ app.use((req, res, next) => {
 });
 async function createOffChainDB() {
   try {
-    // await nano.db.destroy('alice')
-    // await nano.db.create('alice')
+
     const databases = await nano.db.list();
-    if (databases.indexOf("offDb") < 0) {
-      await nano.db.create("offDb");
+    if (databases.indexOf('off_db') < 0) {
+      await nano.db.create('off_db')
     }
-    offDb = nano.use("offDb");
+    offDb = nano.use('off_db');
   } catch (e) {
     // failed
     console.error(e);
@@ -98,10 +98,10 @@ async function createOffChainDB() {
 async function createAuthDB() {
   try {
     const databases = await nano.db.list();
-    if (databases.indexOf("authDb") < 0) {
-      await nano.db.create("authDb");
+    if (databases.indexOf('auth_db') < 0) {
+      await nano.db.create('auth_db');
     }
-    authDb = nano.use("auth");
+    authDb = nano.use('auth_db');
   } catch (e) {
     // failed
     console.error(e);
@@ -120,10 +120,17 @@ createAuthDB();
 // https.createServer({ key: fs.readFileSync('./asad.key'), cert: fs.readFileSync('./asad.crt'), }, app) .listen(port,()=>{
 //     console.log(`Server started on  ${port}`);
 // });
-
-app.listen(port, () => {
-  console.log(`Server started on  ${port}`);
-});
+https
+  .createServer(
+    { key: fs.readFileSync("./asad.key"), cert: fs.readFileSync("./asad.crt") },
+    app
+  )
+  .listen(port, () => {
+    console.log(`Server started On  ${port}`);
+  });
+// app.listen(port, () => {
+//   console.log(`Server started on  ${port}`);
+// });
 
 function getErrorMessage(field) {
   var response = {
@@ -387,7 +394,8 @@ app.post(
         fcn,
         args,
         req.userCnic,
-        req.orgname
+        req.orgname,
+        offDb
       );
       console.log(`message result is : ${message}`);
 

@@ -3,7 +3,7 @@ import QRCode from "qrcode";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Carousel, CarouselItem, Image } from "react-bootstrap";
-
+import {BASE_URL} from "../../constants.js"
 function Data() {
   const [token, setToken] = useState(() =>
     JSON.parse(localStorage.getItem("token"))
@@ -20,8 +20,8 @@ function Data() {
 
   useEffect(async () => {
     console.log(address);
-    const url1 = `http://localhost:4000/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=queryLand`;
-    const url2 = `http://localhost:4000/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=getHistoryForAsset`;
+    const url1 = `${BASE_URL}/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=queryLand`;
+    const url2 = `${BASE_URL}/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=getHistoryForAsset`;
     let conf = {
       headers: {
         Authorization: `Bearer ${token}`,

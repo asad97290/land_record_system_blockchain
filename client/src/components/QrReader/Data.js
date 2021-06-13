@@ -2,6 +2,7 @@ import React from "react";
 import QRCode from "qrcode";
 import QrReader from "react-qr-reader";
 import { useState } from "react";
+import {BASE_URL} from "../../constants.js"
 import axios from "axios";
 
 export default function Data() {
@@ -16,7 +17,7 @@ export default function Data() {
   };
 
   const handleSubmit = (qr) => {
-    const url1 = `http://localhost:4000/channels/mychannel/chaincodes/fabcar?args=["${qr}"]&fcn=getHistoryForAsset`;
+    const url1 = `${BASE_URL}/channels/mychannel/chaincodes/fabcar?args=["${qr}"]&fcn=getHistoryForAsset`;
 
     if (token) {
       axios.get(url1, conf).then((response) => {
@@ -39,7 +40,7 @@ export default function Data() {
     if (result) {
       axios
         .get(
-          `http://localhost:4000/channels/mychannel/chaincodes/fabcar?args=["${result}"]&fcn=getHistoryForAsset`,
+          `${BASE_URL}/channels/mychannel/chaincodes/fabcar?args=["${result}"]&fcn=getHistoryForAsset`,
           conf
         )
         .then((response) => {
