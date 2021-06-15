@@ -16,22 +16,6 @@ export default function Data() {
     },
   };
 
-  const handleSubmit = (qr) => {
-    const url1 = `${BASE_URL}/channels/mychannel/chaincodes/fabcar?args=["${qr}"]&fcn=getHistoryForAsset`;
-
-    if (token) {
-      axios.get(url1, conf).then((response) => {
-        if (response.data.result.length === 0) {
-          alert("Invalid VIN Number");
-        } else {
-          window.location.pathname = "/car/" + qr + "/" + token;
-        }
-      });
-    } else {
-      alert("Signin First to Continue");
-    }
-  };
-
   const handleError = (error) => {
     alert(error);
   };
@@ -40,14 +24,14 @@ export default function Data() {
     if (result) {
       axios
         .get(
-          `${BASE_URL}/channels/mychannel/chaincodes/fabcar?args=["${result}"]&fcn=getHistoryForAsset`,
+          `${BASE_URL}/getLandHistory?address=${result}`,
           conf
         )
         .then((response) => {
           if (response.data.result.length === 0) {
             alert("Invalid VIN Number");
           } else {
-            window.location.pathname = "/car/" + result;
+            window.location.pathname = "/property/" + result;
           }
         });
 

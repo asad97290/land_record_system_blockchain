@@ -477,7 +477,11 @@ app.get(
     }
   }
 );
-
+app.get("/getLandHistory", async (req, res) => {
+  let address = req.query.address;
+  let land = await offDb.get(address);
+  res.json({ land });
+});
 //post car pics to aws s3
 app.post("/profile-img-upload", (req, res) => {
   profileImgUpload(req, res, (error) => {

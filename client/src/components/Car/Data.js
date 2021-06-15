@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { Carousel, CarouselItem, Image } from "react-bootstrap";
 import {BASE_URL} from "../../constants.js"
 function Data() {
-  const [token, setToken] = useState(() =>
+  const [token] = useState(() =>
     JSON.parse(localStorage.getItem("token"))
   );
   const [property, setProperty] = useState({});
@@ -18,7 +18,10 @@ function Data() {
 
   let { address } = useParams();
 
-  useEffect(async () => {
+  useEffect(() => {
+    
+    async function fetchData() {
+   
     console.log(address);
     const url1 = `${BASE_URL}/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=queryLand`;
     const url2 = `${BASE_URL}/channels/mychannel/chaincodes/landRecord?args=["${address}"]&fcn=getHistoryForAsset`;
@@ -36,6 +39,10 @@ function Data() {
 
     const url = await QRCode.toDataURL(address);
     setImageURL(url);
+  }
+ 
+  fetchData()
+    // eslint-disable-next-line
   }, []);
 
   function copyText(id) {
@@ -200,14 +207,19 @@ function Data() {
                         {propertyHistory.map((propertyInfo, index) => {
                           return (
                             <li key={index}>
+                              {/* eslint-disable-next-line*/}
                               <a style={{ color: "#DC3545" }}>
+                              
                                 Transaction ID: {propertyInfo.TxId.slice(0, 40)}{" "}
                               </a>
+                              {/* eslint-disable-next-line*/}
                               <a
                                 className="float-right"
                                 style={{ color: "#DC3545" }}
                               >
+                                
                                 {" "}
+                                
                                 {new Date(
                                   propertyInfo.Timestamp
                                 ).toLocaleString()}{" "}
