@@ -8,8 +8,7 @@ client/node_modules
 api/node_modules
 api/org1-wallet
 api/org1-wallet
-api/*.crt
-api/*.key
+
 api/test.js
 
 artifacts/channel/crypto-config
