@@ -102,7 +102,7 @@ func (s *SmartContract) createLand(APIstub shim.ChaincodeStubInterface, args []s
 
 	landAsBytes, _ := json.Marshal(land)
 	APIstub.PutState(args[0], landAsBytes)
-
+	APIstub.SetEvent("CreateLand",landAsBytes)
 	indexName := "ownerCnic~address"
 	colorNameIndexKey, err := APIstub.CreateCompositeKey(indexName, []string{land.OwnerCnic, args[0]})
 	if err != nil {
@@ -258,7 +258,7 @@ func (s *SmartContract) changeLandOwner(APIstub shim.ChaincodeStubInterface, arg
 
 	landAsBytes, _ = json.Marshal(land)
 	APIstub.PutState(args[0], landAsBytes)
-
+	APIstub.SetEvent("OwnerChanged",landAsBytes) 
 	// add new key
 	newOwnerLandidIndexKey, err := APIstub.CreateCompositeKey(indexName, []string{args[1], args[0]})
 	if err != nil {
