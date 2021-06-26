@@ -39,7 +39,7 @@ app.use(
   expressJWT({
     secret: "thisismysecret",
   }).unless({
-    path: ["/users", "/users/login", "/profile-img-upload"],
+    path: ["/users", "/users/login", "/profile-img-upload","/getLandHistory"],
   })
 );
 app.use(bearerToken());
@@ -51,7 +51,8 @@ app.use((req, res, next) => {
   if (
     req.originalUrl.indexOf("/users") >= 0 ||
     req.originalUrl.indexOf("/profile-img-upload") >= 0 ||
-    req.originalUrl.indexOf("/users/login") >= 0
+    req.originalUrl.indexOf("/users/login") >= 0 ||
+    req.originalUrl.indexOf("/getLandHistory") >= 0
   ) {
     return next();
   }
